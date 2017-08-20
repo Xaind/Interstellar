@@ -1,11 +1,14 @@
-function() {
+(function() {
 "use strict";
 
-$app.pageModel({
-	elements: [
-		$p.invoiceDate,
-		$p.policyNumber
-	]
+$(function() {
+	var $p = $app.pageModel;
+	$p({
+		pageElements: [
+			$p.invoiceDate,
+			$p.policyNumber
+		]
+	});
 });
 
-}(); 
+})(); 

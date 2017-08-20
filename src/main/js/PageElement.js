@@ -1,25 +1,28 @@
-function() {
+(function() {
 "use strict";
 
-var $app.pageElement = function(config) {
+$app.namespace("pageModel");
+
+$app.pageModel.pageElement = function(config) {
+	
+	var bindEventCallback = function(events, context, callback) {
+		for (var j = 0, length = events.length; j < length; j++) {
+			$("#" + config.id).on(events[j], context, callback);
+		}
+	};
 	
 	// Bind the event listeners
 	if (config.eventCallbacks) {
 		for (var i = 0, length = config.eventCallbacks.length; i < length; i++) {
 			var eventCallback = config.eventCallbacks[i];
-			bindEventCallback(eventCallback.events, eventCallback.execute);
+			bindEventCallback(eventCallback.events, config, eventCallback.callback);
 		}
 	}
 	
 	// Bind the validator
 	if (config.validation) {
-		bindEventCallback(config.validation.events, config.validation.validator.validate);
-	}
-	
-	this.bindEventCallback = function(events, callback) {
-		for (var j = 0, length = events.length; j < length; j++) {
-			$("#" + config.id).on(events[j], callback.call(config.pageElement));
-		}
+		var validation = config.validation;
+		bindEventCallback(validation.events, validation.validator, validation.validator.validate);
 	}
 	
 	// Define the page element
@@ -55,4 +58,4 @@ var $app.pageElement = function(config) {
 	}
 };
 
-}();
+})();

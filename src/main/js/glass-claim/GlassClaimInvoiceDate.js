@@ -1,30 +1,31 @@
-function() {
+(function() {
 "use strict";
 
-var $p = $app.pageModel;
-
-var $p.invoiceDate = $p.pageElement({
-	id: "invoice-date",
-	name: "invoiceDate",
-	type: "date",
+$(function() {
+	var $p = $app.pageModel;
 	
-	eventCallbacks: [{
-		callback: function() {
-			alert(this.id + " clicked!");
-		},
-		events: ["focusout"]
-	},
+	$p.invoiceDateValidator = new $app.Validator(function() {
+		alert("Validating " +  $p.invoiceDate.id + "!");
+	});
 	
-	validation: {
-		validator: $p.invoiceDateValidator,
-		events: ["focusout"]	
-	}
+	$p.invoiceDate = $p.pageElement({
+		id: "invoice-date",
+		name: "invoiceDate",
+		type: "date",
+		
+		eventCallbacks: [{
+			callback: function(event) {
+				alert(event.data.id + " clicked!");
+			},
+			events: ["click"]
+		}],
+		
+		validation: {
+			validator: $p.invoiceDateValidator,
+			events: ["focusout"]	
+		}
+	});
+	
 });
 
-var $p.invoiceDateValidator = $.extends({}, $v.base, {
-	doValidation: function() {
-		alert("Validating invoice date!");
-	}	
-});
-
-}(); 
+})(); 

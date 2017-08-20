@@ -1,15 +1,15 @@
-function() {
+(function() {
 "use strict";
 	
-var $app.pageModel = function(config) {
+$app.pageModel = function(config) {
 	return {
-		elements: config.elements,
+		pageElements: config.pageElements,
 		
 		validate: function() {
 			var isValid = true;
-			for (var i = 0; i < this.elements.length; i++) {
-				if (this.elements[i].validator) {
-					isValid =| this.elements[i].validate();
+			for (var i = 0; i < this.pageElements.length; i++) {
+				if (this.pageElements[i].validator) {
+					isValid = isValid & this.pageElements[i].validate();
 				}
 			}
 			return isValid;
@@ -18,14 +18,14 @@ var $app.pageModel = function(config) {
 		getData: function() {
 			var data = [];
 			
-			for (var i = 0, length = this.elements.length; i < length; i++) {
-				var element = this.elements[i];
+			for (var i = 0, length = this.pageElements.length; i < length; i++) {
+				var pageElement = this.pageElements[i];
 				data.push({
-					name: element.name,
-					value: element.value,
-					type: element.type,
-					validationStatus: element.validation.status,
-					validationMessage: element.validation.message
+					name: pageElement.name,
+					value: pageElement.value,
+					type: pageElement.type,
+					validationStatus: pageElement.validation.status,
+					validationMessage: pageElement.validation.message
 				});
 			}
 			
@@ -34,5 +34,5 @@ var $app.pageModel = function(config) {
 	}		
 };
 	
-}();
+})();
 
