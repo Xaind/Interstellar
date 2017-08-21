@@ -34,7 +34,13 @@ $page.invoiceDate = Interstellar.element({
 		postValidationHandler: function() {
 			console.log("Post-validation: " + this.element.id);
 		}
-	})
+	}),
+	
+	validationRenderer: {
+		updateView: function() {
+			console.log("Custom validation renderer!");
+		}
+	}
 });
 
 })(); 

@@ -1,8 +1,22 @@
+/*
+ * Interstellar.js
+ * https://github.com/Xaind/interstellar
+ * Copyright 2017, Shane Parker; Licensed MIT
+ */
+
 var Interstellar = {};
 
 (function() {
 "use strict";
 
+/**
+ * The top-level object which manages the page model. HTML fields are typically
+ * add via calls to Interstellar.element(). Helper functions are provided for
+ * validation and for getting and setting the model via JSON.
+ * 
+ * @namespace Interstellar
+ * @class Element
+ */
 $.extend(Interstellar, {
 	elements: [],
 	
@@ -57,6 +71,14 @@ $.extend(Interstellar, {
 		if (element.validator) {
 			element.validator.element = element;
 			element.registerValidator(element.validator);
+			
+			// Set up the validation renderer
+			if (element.validationRenderer) {
+				element.validator.validationRenderer = element.validationRenderer;
+			} else {
+				// Use the default validation renderer
+				element.validator.validationRenderer = Interstellar.ValidationRenderer;
+			}
 		}
 		
 		return element;
@@ -80,6 +102,9 @@ $.extend(Interstellar, {
 
 /**
  * Page element definition.
+ * 
+ * @namespace Interstellar
+ * @class Element
  */
 Interstellar.Element = {		
 	id: null,
@@ -145,7 +170,7 @@ Interstellar.Element = {
 };
 
 /**
- * Base validation object. Validators must implement the doValidation() method and
+ * Validation object. Validators must implement the doValidation() method and
  * can optionally implement pre- and post-validation handlers. The validation can
  * be cancelled by returning true from a preValidationHandler.
  * 
@@ -153,9 +178,8 @@ Interstellar.Element = {
  * 
  * This object must be extended to include an 'element' property.
  * 
- * @namespace $app
+ * @namespace Interstellar
  * @class Validator
- * @return true if the validation status is SUCCESS (see $app.validation.ValidationStatus)
  */
 Interstellar.Validator = {
 	status: null,
@@ -178,6 +202,7 @@ Interstellar.Validator = {
 			}
 		}
 		
+		this.validationRenderer.updateView();
 		return Interstellar.SUCCESS === this.status;
 	},
 	
@@ -195,6 +220,12 @@ Interstellar.Validator = {
 	
 	isCancelled: function() {
 		return this.status === Interstellar.CANCELLED;
+	}
+};
+
+Interstellar.ValidationRenderer = {
+	updateView: function() {
+		console.log("Default validation renderer!");
 	}
 };
 
