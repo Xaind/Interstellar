@@ -1,7 +1,7 @@
 /*
  * Interstellar.js
  * https://github.com/Xaind/interstellar
- * Copyright 2017, Shane Parker; Licensed MIT
+ * Copyright 2017, Xaind; Licensed MIT
  */
 package org.interstellar.model;
 
