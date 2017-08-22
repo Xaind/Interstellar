@@ -1,5 +1,5 @@
 /*
- * Interstellar.js
+ * interstellar.js
  * https://github.com/Xaind/interstellar
  * Copyright 2017, Xaind; Licensed MIT
  */
@@ -14,8 +14,7 @@ var Interstellar = {};
  * add via calls to Interstellar.element(). Helper functions are provided for
  * validation and for getting and setting the model via JSON.
  * 
- * @namespace Interstellar
- * @class Element
+ * @class Interstellar
  */
 $.extend(Interstellar, {
 	elements: [],
@@ -103,7 +102,6 @@ $.extend(Interstellar, {
 /**
  * Page element definition.
  * 
- * @namespace Interstellar
  * @class Element
  */
 Interstellar.Element = {		
@@ -178,7 +176,6 @@ Interstellar.Element = {
  * 
  * This object must be extended to include an 'element' property.
  * 
- * @namespace Interstellar
  * @class Validator
  */
 Interstellar.Validator = {
