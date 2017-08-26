@@ -1,0 +1,327 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout}">
+
+<head>
+	<title>Claim Lodgement</title>
+	
+	<meta name="env-max-invoice-amount" th:content="${@environment.getProperty('app.max-invoice-amount')}" />
+	<meta name="env-max-invoice-file-count" th:content="${@environment.getProperty('app.upload.max-file-count')}" />
+	<meta name="env-max-invoice-file-size" th:content="${@environment.getProperty('app.upload.max-file-size')}" />
+	
+	<!--/* Minified resources are created for Production */-->
+	<object th:if="${#strings.contains(@environment.getProperty('spring.profiles.active'), 'production')}" th:remove="tag">
+		<link rel="stylesheet" type="text/css" th:href="@{/css/claim.min.css}"/>
+		<script th:src="@{/js/glass.min.js}" defer></script>
+	</object>
+	
+	<!--/* The original resources are used for Development to allow live reload */-->
+	<object th:if="${!#strings.contains(@environment.getProperty('spring.profiles.active'), 'production')}" th:remove="tag">
+		<link rel="stylesheet" type="text/css" th:href="@{/css/claim.css}" />
+		<script th:src="@{/js/glass/glass.js}" defer></script>
+		<script th:src="@{/js/glass/invoice-date.js}" defer></script>
+		<script th:src="@{/js/glass/policy-number.js}" defer></script>
+		<script th:src="@{/js/glass/vehicle-identifier.js}" defer></script>
+		<script th:src="@{/js/glass/payee.js}" defer></script>
+		<script th:src="@{/js/glass/invoice-amount.js}" defer></script>
+		<script th:src="@{/js/glass/invoice-number.js}" defer></script>
+		<script th:src="@{/js/glass/invoice-files.js}" defer></script>
+		<script th:src="@{/js/glass/excess.js}" defer></script>
+	</object>
+	
+</head>
+
+<body>
+	<section layout:fragment="content">
+		<div class="container glass-claim">
+			<div class="row margin-fix">
+			
+				<form id="glass-claim-form" class="form-horizontal" th:action="@{/glass/lodge}" method="post" role="form">
+    	
+					<!--/* Claim Lodgement Header */-->
+					<div class="row header">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-2">
+							<h4>Pay Me Now</h4>
+							<h1>Glass Claim</h1>
+							<p>Please fill out all of the following fields before lodgement.</p>
+						</div>
+					</div>
+
+					<!--/* Invoice Date */-->
+					<div class="row invoice-date">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="invoice-date" class="col-sm-4 control-label">Invoice Date</label>
+								<div class="col-sm-6">
+									<div class="input-group date">
+										<input id="invoice-date" type="text" class="form-control" name="invoiceDate" placeholder="dd/mm/yyyy" maxlength="20" autofocus autocomplete="off" tabindex="1">
+										<div class="input-group-addon">
+											<i class="fa fa-calendar"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--/* Policy Number */-->
+					<div class="row policy-number">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="policy-number" class="col-sm-4 control-label">Policy Number</label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<input id="policy-number" type="text" class="form-control" name="policyNumber" placeholder="Policy Number" maxlength="16" autocomplete="off"  tabindex="2">
+										<div class="input-group-addon">
+											<i class="fa fa-search"></i>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--/* Vehicle Identifier */-->
+					<div class="row vehicle-identifier hidden">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="vehicle-identifier" class="col-sm-4 control-label">Vehicle Identifier</label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<input id="vehicle-identifier" type="text" class="form-control" name="vehicleIdentifier" placeholder="Vehicle Identifier" maxlength="20" autocomplete="off" pattern="[A-Z0-9]"  tabindex="3"/>
+										<span class="input-group-addon">
+											<i class="fa fa-search"></i>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!--/* Payee */-->
+					<div class="row payee hidden">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="payee" class="col-sm-4 control-label">Payee</label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<input id="payee" type="text" class="form-control typeahead" name="payee" placeholder="Payee" maxlength="30" autocomplete="off" tabindex="5">
+										<span class="input-group-addon">
+											<i class="fa fa-chevron-down"></i>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>					
+					
+					<!--/* Invoice Amount */-->
+					<div class="row invoice-amount invoice-field hidden">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="invoice-amount" class="col-sm-4 control-label">Invoice Amount</label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<span class="input-group-addon">$</span>
+										<input id="invoice-amount" type="number" class="form-control" name="invoiceAmount" placeholder="Invoice Amount" step="100" autocomplete="off"  tabindex="6"/>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!--/* Invoice GST Inclusive */-->
+					<div class="row invoice-gst-inclusive hidden">
+						<div class="col-xs-offset-1 col-xs-11 col-sm-offset-5 col-sm-7 col-md-offset-4 col-md-8">				
+							<div class="form-group">
+								<div>
+									<input id="invoice-gst-inclusive" type="checkbox" class="form-check-input" value="true" name="invoiceGstInclusive" tabindex="7">
+	                                <label for="invoice-gst-inclusive" class="control-label">Can NTI claim GST?</label>
+                                </div>
+                            </div>
+						</div>
+					</div>
+
+					<!--/* Invoice Number */-->
+					<div class="row invoice-number invoice-field hidden">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="invoice-number" class="col-sm-4 control-label">Invoice Number</label>
+								<div class="col-sm-6">
+									<input id="invoice-number" type="text" class="form-control" name="invoiceNumber" placeholder="Invoice Number" maxlength="30" autocomplete="off"  tabindex="7"/>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!--/* Invoice Files */-->
+					<div class="row invoice-files invoice-field hidden">
+						<div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1">
+							<div class="form-group">
+								<label for="invoice-files" class="col-sm-4 control-label on-update">Upload Invoice</label>
+								<span class="on-update feedback-icon fa"></span>
+								<div class="col-sm-10 col-sm-offset-2">
+									<input id="invoice-files" type="file" class="file-loading" multiple tabindex="9">
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="class">
+						<div class="col-sx-12">
+							<hr />
+						</div>
+					</div>
+
+					<div class="row lodge-btn hidden">
+						<div class="col-sm-12 text-center">
+							<button id="glass-lodgement-btn" class="btn btn-primary btn-md" type="button" tabindex="1000">Lodge Claim</button>
+						</div>
+					</div>
+				
+					<!--/* Hidden fields that are populated dynamically as the user fills in policy details */-->
+					<input id="claim-category" type="hidden" name="claimCategory" value="Glass" />
+					<input id="vehicle-id" type="hidden" name="itemExternalId" />
+					<input id="excess-amount" type="hidden" name="excessAmount" />
+					<input id="gst-amount" type="hidden" name="gstAmount" />
+					<input id="excess-agreement" type="hidden" name="excessAgreed" />
+					<input id="payee-id" type="hidden" name="payeeId" />
+					
+				</form>
+			</div>
+		</div>
+		
+		<!--/* Modal dialog used for displaying excess and summary details */-->
+		<div class="claim-modal modal fade">
+			<div class="modal-dialog modal-loading" role="dialog" tabindex="-1">
+				<div class="modal-content">
+					<div class="modal-header init on-error on-excess on-summary">
+						<div class="row">
+							<div class="col-xs-12 text-center">
+								<h1>
+									<span class="title"></span>
+								</h1>
+							</div>
+						</div>	
+					</div>					
+					<div class="modal-body">
+					
+						<!--/* Loading indicator */-->
+						<div class="loading text-center">
+							<div class="glyphicon glyphicon-cog right-spinner"></div>
+							<div>
+								<span class="text"></span>
+							</div>
+						</div>
+						
+						<!--/* Error message */-->
+						<div class="on-error init text-danger text-center">
+							<span class="icon fa fa-exclamation-triangle"></span>
+							<h4>
+								<span class="text"></span>
+							</h4>
+						</div>
+						
+						<!--/* Excess details */-->
+						<div class="excess-details init on-excess">
+							<div class="row excess-invoice-amount">
+								<label class="col-sm-6 control-label text-right">Invoice Amount:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row excess-amount-to-pay">
+								<label class="col-sm-6 control-label text-right">Amount to Pay:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row excess-insured-pays init non-null-excess">
+								<label class="col-sm-6 control-label text-right">Insured Pays:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row excess-nti-pays init non-null-excess">
+								<label class="col-sm-6 control-label text-right">NTI Pays:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row excess-message">
+								<div class="col-xs-12 col-sm-10 col-sm-offset-1 text-center">
+									<div class="panel">
+								    	<div class="panel-body">
+											<span class="icon"></span>
+											<span class="text"></span>
+								    	</div>
+								  	</div>
+								</div>
+							</div>
+							<div class="row excess-agreement init">
+								<div class="col-xs-12">
+									<div class="form-group">
+									<div class="input-group">
+										<div class="radio">
+											<label><input type="radio" name="excessAgreement" value="true"/>
+												<span>the insured <strong>agrees</strong> to pay the excess amount of </span><span class="excess-insured-pays">.</span>
+											</label>
+										</div>
+										<div class="radio">
+											<label><input type="radio" name="excessAgreement" value="false"/>
+												<span>the insured <strong>does not agree</strong> to pay the excess amount of <span class="excess-insured-pays"></span>.</span>
+											</label>
+										</div>
+									</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!--/* Summary details */-->
+						<div class="summary-details init on-summary">
+							<div class="row summary-invoice-date">
+								<label class="col-sm-6 control-label text-right">Invoice Date:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row summary-policy-number">
+								<label class="col-sm-6 control-label text-right">Policy Number:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row summary-invoice-amount">
+								<label class="col-sm-6 control-label text-right">Invoice Amount:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row summary-excess-amount init non-null-excess">
+								<label class="col-sm-6 control-label text-right">Excess Amount:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row summary-nti-pays-amount init non-null-excess">
+								<label class="col-sm-6 control-label text-right">NTI will pay:</label>
+								<div class="col-sm-6"></div>
+							</div>
+							<div class="row summary-message">
+								<div class="col-xs-12 col-sm-10 col-sm-offset-1 text-center">
+									<div class="panel">
+								    	<div class="panel-body">
+											<span class="icon fa fa-check-square-o"></span>
+											<span class="text"></span>
+								    	</div>
+								  	</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-sm-10 col-sm-offset-1 text-center">
+									<h3>
+										<span class="summary-claim-number"></span>
+									</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="modal-footer init on-error on-excess on-summary">
+						<button id="claim-modal-continue" type="button" class="btn btn-primary btn-md init on-excess">Continue</button>
+						<button id="claim-modal-ok" type="button" class="btn btn-primary btn-md init on-summary">Done</button>
+						<button id="claim-modal-cancel" type="button" class="btn btn-secondary btn-md init on-error on-excess" data-dismiss="modal">Cancel</button>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</section>
+
+</body>
+</html>

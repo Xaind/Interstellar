@@ -1,5 +1,5 @@
 /*
- * Interstellar.js
+ * interstellar.js
  * https://github.com/Xaind/interstellar
  * Copyright 2017, Xaind; Licensed MIT
  */
