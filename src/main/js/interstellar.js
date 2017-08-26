@@ -14,8 +14,7 @@ var Interstellar = {};
  * add via calls to Interstellar.element(). Helper functions are provided for
  * validation and for getting and setting the model via JSON.
  * 
- * @namespace Interstellar
- * @class Element
+ * @class Interstellar
  */
 $.extend(Interstellar, {
 	elements: [],
@@ -141,7 +140,6 @@ $.extend(Interstellar, {
  * any HTML element such as a button, link or even a div. An element is created by passing in a
  * configuration object to Interstellar.element(). 
  * 
- * @namespace Interstellar
  * @class Element
  */
 Interstellar.Element = {		
@@ -295,7 +293,6 @@ Interstellar.Element = {
  * 
  * This object must be extended to include an 'element' property.
  * 
- * @namespace Interstellar
  * @class Validator
  */
 Interstellar.Validator = {
