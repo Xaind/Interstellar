@@ -3,7 +3,7 @@
 
 $Page.password = Interstellar.element({
 	name: "password",
-	type: "text",
+	type: "string",
 	
 	validator: Interstellar.validator({
 		errorMessage: "A password is required."

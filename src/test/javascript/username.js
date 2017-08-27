@@ -3,7 +3,7 @@
 
 $Page.username = Interstellar.element({
 	name: "username",
-	type: "text",
+	type: "string",
 	
 	listeners: [{
 		events: "click",
