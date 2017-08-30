@@ -34,8 +34,8 @@
 				</executions>
 				<configuration>
 					<wroManagerFactory>ro.isdc.wro.maven.plugin.manager.factory.ConfigurableWroManagerFactory</wroManagerFactory>
-					<cssDestinationFolder>${build.directory}/css/</cssDestinationFolder>
-					<jsDestinationFolder>${build.directory}/js/</jsDestinationFolder>
+					<cssDestinationFolder>${project.build.directory}/css/</cssDestinationFolder>
+					<jsDestinationFolder>${project.build.directory}/js/</jsDestinationFolder>
 					<extraConfigFile>${basedir}/src/main/resources/wro.properties</extraConfigFile>
 					<wroFile>${basedir}/src/main/resources/wro.xml</wroFile>
 				</configuration>

@@ -8,7 +8,7 @@ $Page.loginBtn = Interstellar.element({
 		events: "mousedown",
 		callback: function() {
 			Interstellar.validate();
-			alert("Login submitted! Data: " + JSON.stringify(Interstellar.data()));
+			alert("Login submitted! Data: " + JSON.stringify(Interstellar.getModel()));
 		}
 	}
 });

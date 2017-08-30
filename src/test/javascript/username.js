@@ -8,13 +8,13 @@ $Page.username = Interstellar.element({
 	listeners: [{
 		events: "click",
 		callback: function() {
-			console.log("Listener: " + this.element.name + " clicked!");
-			console.log("Data: " + JSON.stringify(Interstellar.data()));
+			console.log("Listener: " + this.name + " clicked!");
+			console.log("Data: " + JSON.stringify(Interstellar.getModel()));
 		}
 	}, {
 		events: "enterkey",
 		callback: function() {
-			console.log("Listener: " + this.element.name + " onenterkey!");
+			console.log("Listener: " + this.name + " onenterkey!");
 		}
 	}],
 	
