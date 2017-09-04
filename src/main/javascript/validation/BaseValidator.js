@@ -1,6 +1,6 @@
 /*
  * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
+ * https://github.com/xaind/interstellar
  * Copyright 2017, Xaind; Licensed MIT
  */
  
@@ -16,9 +16,6 @@
  * @module Interstellar.BaseValidator
  */
 Interstellar.BaseValidator = {
-	status: null,
-	message: null,
-	
 	/**
 	 * Base validation function the contains 3 template methods. This is the function called
 	 * by external objects when validating an element.

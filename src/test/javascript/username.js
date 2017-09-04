@@ -5,6 +5,10 @@ $Page.username = Interstellar.element({
 	name: "username",
 	type: "string",
 	
+	init: function() {
+		alert("Initialized username field!");
+	},
+	
 	listeners: [{
 		events: "click",
 		callback: function() {

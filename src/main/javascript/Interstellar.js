@@ -1,6 +1,6 @@
 /*
  * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
+ * https://github.com/xaind/interstellar
  * Copyright 2017, Xaind; Licensed MIT
  */
 
@@ -191,6 +191,12 @@ Interstellar = (function() {
 			}
 			
 			syncElement(element);
+			
+			// Run any custom initialization code
+			if (element.init) {
+				element.init();
+			}
+			
 			return element;
 		},
 	
