@@ -1,7 +1,7 @@
 /*
  * Interstellar Javascript Framework
  * https://github.com/Xaind/interstellar
- * Copyright 2017, Xaind; Licensed MIT
+ * Copyright 2017, Xaind; Licensed Apache 2.0
  */
 
 /**
