@@ -1,7 +1,7 @@
 (function() {
 "use strict";
 
-$Page.username = Interstellar.element({
+$Page.username = Core.element({
 	name: "username",
 	type: "string",
 	
@@ -26,6 +26,11 @@ $Page.username = Interstellar.element({
 			events: ["focusout","enterkey"],
 			errorMessage: "A username is required."
 		}, Interstellar.RequiredValidator),
+		
+	customFunction: function() {
+		alert("Custom function!");
+		this.clearValidation();
+	}
 });
 
 })(); 

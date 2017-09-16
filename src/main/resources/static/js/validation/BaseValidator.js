@@ -5,7 +5,7 @@
  */
  
 /**
- * Validation object. Validators must implement the doValidation() method and
+ * The base validation object. Validators must implement the doValidation() method and
  * can optionally implement pre- and post-validation handlers. The validation can
  * be cancelled by returning true from a preValidationHandler.
  * 

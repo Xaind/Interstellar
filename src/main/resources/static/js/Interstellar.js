@@ -10,17 +10,16 @@
  */
 var Interstellar = {};
 
-(function() {
-"use strict";
-
 /**
  * The top-level object which manages the page model. HTML fields are typically
- * add via calls to Interstellar.element(). Helper functions are provided for
+ * added via calls to Interstellar.element(). Helper functions are provided for
  * validation and for getting and setting the model via JSON.
  * 
  * @module Interstellar
  */
 Interstellar = (function() {
+	"use strict";
+	
 	/**
 	 * The elements contained in this Interstellar page model.
 	 * @type Array
@@ -245,6 +244,4 @@ Interstellar = (function() {
 		VALIDATING: "validating"
 	}
 	
-})();
-
 })();

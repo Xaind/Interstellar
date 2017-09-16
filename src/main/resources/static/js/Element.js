@@ -3,9 +3,6 @@
  * https://github.com/xaind/interstellar
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
-(function() {
-"use strict";
-
 /**
  * Page element definition. An element typically represents a HTML input element but can be used
  * any HTML element such as a button, link or even a div. An element is created by passing in a
@@ -14,9 +11,11 @@
  * @module Interstellar.Element
  */
 Interstellar.Element = (function() {
+	"use strict";
+	
 	/**
-	 * Binds a function to an event on the element. Typically used to bind onclick listeners and validation callbacks.
-	 * This function is not intended to be accessed directly, it is called by the registerXXX() functions.
+	 * Binds a function to an event on the element. Typically used to bind onClick listeners and validation callbacks.
+	 * This function is not intended to be accessed directly, it is called by the event registration function.
 	 * 
 	 * @param callback The callback function to execute.
 	 * @param events An array of events to bind the callback to the element.
@@ -31,7 +30,7 @@ Interstellar.Element = (function() {
 			if (event === "enterkey") {
 				context.el().on("keypress", function(e) {
 					if (e.which === 13) {
-						callback.call(context);
+						callback.call(context, e);
 					}
 				});
 			}  else {
@@ -107,6 +106,13 @@ Interstellar.Element = (function() {
 		},
 		
 		/**
+		 * Clears the validation styling for this element.
+		 */
+		clearValidation: function() {
+			this.validator.validationRenderer.clearValidation();
+		},
+		
+		/**
 		 * Checks the current validation status.
 		 *
 		 * @return True if the element is valid, false otherwise.
@@ -151,6 +157,4 @@ Interstellar.Element = (function() {
 			return this.validator.isValidating();
 		}	
 	}
-})();
-
 })();
