@@ -1,160 +1,246 @@
 /*
- * Interstellar Javascript Framework
- * https://github.com/xaind/interstellar
+ * Element Javascript Framework
+ * https://github.com/xaind/element
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
 /**
- * Page element definition. An element typically represents a HTML input element but can be used
- * any HTML element such as a button, link or even a div. An element is created by passing in a
- * configuration object to Interstellar.element(). 
- * 
- * @module Interstellar.Element
+ * The Element namespace. The main Element object is attached to the Global namespace.
+ * @namespace Element
  */
-Interstellar.Element = (function() {
+var Element = {};
+
+/**
+ * The top-level object which manages the page model. HTML fields are typically
+ * added via calls to Element.create(). Helper functions are provided for
+ * validation and for getting and setting the model via JSON.
+ * 
+ * @module Element
+ */
+Element = (function() {
 	"use strict";
 	
 	/**
-	 * Binds a function to an event on the element. Typically used to bind onClick listeners and validation callbacks.
-	 * This function is not intended to be accessed directly, it is called by the event registration function.
-	 * 
-	 * @param callback The callback function to execute.
-	 * @param events An array of events to bind the callback to the element.
+	 * The elements contained in this Element page model.
+	 * @type Array
 	 */
-	var bind = function(context, callback, events) {
-		if (!(events instanceof Array)) {
-			events = [events];
+	var elements = [],
+	
+	/**
+	 * The data model. The data model contains the state of the elements and can be 
+	 * used to pre-populate the element values and validation status.
+	 * @type Object
+	 */
+	model = {},
+	
+	/**
+	 * The id of the form which contains the model object.
+	 * @type String
+	 */
+	formId = "element-form",
+	
+	/**
+	 * The name of the model object as contained in the form hidden input element.
+	 * 	@type String
+	 */
+	modelName = "element-model",
+	
+	/**
+	 * The default validation renderer.
+	 * @type Object
+	 */
+	defaultValidationRenderer = null,
+	
+	/**
+	 * Syncs the data model with the element data.
+	 * @return the updated data model
+	 */
+	syncModel = function() {
+		var data = [];
+		for (var i = 0, length = elements.length; i < length; i++) {
+			var element = elements[i];
+			if (!element.name) {
+				continue;
+			}
+			
+			data.push({
+				name: element.name,
+				value: element.value(),
+				type: element.type,
+				validationStatus: element.validator.status,
+				validationMessage: element.validator.message
+			});
 		}
 		
-		for (var j = 0, length = events.length; j < length; j++) {
-			var event = events[j];
-			if (event === "enterkey") {
-				context.el().on("keypress", function(e) {
-					if (e.which === 13) {
-						callback.call(context, e);
-					}
-				});
-			}  else {
-				context.el().on(events[j], context, callback);
+		$.extend(model, data);
+	},
+	
+	/**
+	 * Syncs the element data with the data model.
+	 * @param element The element to update with model data.
+	 */
+	sync = function(element) {
+		if (!element.name) {
+			return;
+		}
+		
+		for (var i = 0, length = model.length; i < length; i++) {
+			var modelElement = model[i];
+			
+			if (element.name === modelElement.name) {
+				element.val(modelElement.value);
+				
+				if (element.validator) {
+					element.validator.status = modelElement.status;
+					element.validator.message = modelElement.validator.message;
+				}
+				
+				return;
 			}
 		}
 	};
 	
-	return {		
+	return {
 		/**
-		 * Returns the jQuery object that represents this element.
-		 * @return The associated jQuery object.
+		 * Initializes the Element object.
 		 */
-		el: function() {
-			if (this.id) {
-				return $("#" + this.id);
-			} else if (this.name) {
-				return $("#" + this.name);
-			} else {
-				console.error("Error getting element target. No id or a name property has been defined!");
+		init: function(config) {
+			if (config.formId) {
+				formId = config.formId;
+			}
+			
+			if (config.modelName) {
+				modelName = config.modelName;
+			}
+			
+			if (config.defaultValidationRenderer) {
+				defaultValidationRenderer = config.defaultValidationRenderer;
+			}
+			
+			// Check if there is a model object in the form and update the data model
+			var modelInputElement = $("#" + formId + " input[name='" + modelName + "']");
+			if (modelInputElement) {
+				model = JSON.parse(modelInputElement.val());
 			}
 		},
 		
 		/**
-		 * Sets or returns the value assigned to this element. If a value is specified then
-		 * this acts as a setter otherwise it will return the currently assigned value.
-		 *
-		 * @param value The value to assign (should be undefined when getting the value).
-		 * @return The current value assigned to this element.
-		 */
-		value: function(value) {
-			if (typeof value === "undefined") {			
-				return this.el().val();
-			}		
-			this.el().val(value);
-		},
-		
-		/**
-		 * Registers a generic listener with this element. The listener will contains an array of events that will
-		 * be bound to this element as well as the callback function.
-		 *
-		 * @param listener The listener to bind.
-		 */
-		registerListener: function(listener) {
-			if (!this.listeners) {
-				this.listeners = [];
-			}
-			this.listeners.push(listener);
-			bind(this, listener.callback, listener.events);
-		},
-		
-		/**
-		 * Registers a validator with this element. The validator will contain an array of events that will
-		 * trigger the validation. It will also contain the validation callback function.
-		 *
-		 * @param validator The validator to bind.
-		 */
-		registerValidator: function(validator) {
-			this.validator = validator;
-			bind(this, function() {
-				validator.validate();
-			}, validator.events);
-		},
-		
-		/**
-		 * Calls this element's validators. If you just need to check the current validation status
-		 * then use one of the status check functions below.
-		 *
-		 * @return True if the element is valid, false otherwise.
+		 * Validates all elements currently registered with Element.
+		 * @return True if all elements are valid, false otherwise.
 		 */
 		validate: function() {
-			return this.validator.validate();
+			var isValid = true;
+			for (var i = 0; i < elements.length; i++) {
+				if (elements[i].validator) {
+					isValid = isValid & elements[i].validate();
+				}
+			}
+			return isValid;
 		},
 		
 		/**
-		 * Clears the validation styling for this element.
+		 * Gets the current data model by syncing with the element data.
+		 * @return The data model.
 		 */
-		clearValidation: function() {
-			this.validator.validationRenderer.clearValidation();
+		getModel: function() {
+			syncModel();
+			return model;
 		},
 		
 		/**
-		 * Checks the current validation status.
-		 *
-		 * @return True if the element is valid, false otherwise.
+		 * Creates a page element based on the specified configuration. If a data model is
+		 * present then it will be checked for a matching name and set the element's value
+		 * and validation status accordingly. 
+		 * 
+		 * @param config The element configuration.
 		 */
-		isValid: function() {
-			return this.validator.isSuccess();
+		create: function(config) {
+			var element = $.extend({}, Element.HtmlElement, config);
+			elements.push(element);
+			
+			if (element.listeners) {
+				if (!(element.listeners instanceof Array)) {
+					element.listeners = [element.listeners];
+				}
+				
+				for (var i = 0, length = element.listeners.length; i < length; i++) {
+					var listener = element.listeners[i];
+					listener.element = element;
+					element.registerListener(listener);
+				}
+			}
+	
+			if (element.validator) {
+				element.validator.element = element;
+				element.registerValidator(element.validator);
+				
+				// Set up the validation renderer
+				if (element.validationRenderer) {
+					element.validator.validationRenderer = element.validationRenderer;
+				} else if (defaultValidationRenderer) {
+					// Next see if we have a default validation renderer
+					element.validationRenderer = $.extend({}, defaultValidationRenderer);
+				} else {
+					// If no renderer specified use the default for Bootstrap3
+					defaultValidationRenderer = Element.ValidationRenderer;
+					element.validationRenderer = $.extend({}, defaultValidationRenderer);
+				}
+				element.validator.validationRenderer = element.validationRenderer;
+				element.validationRenderer.validator = element.validator;
+			}
+			
+			sync(element);
+			
+			// Run any custom initialization code
+			if (element.init) {
+				element.init();
+			}
+			
+			return element;
+		},
+	
+		/**
+		 * Creates a validator based on the specified config. If a baseValidator
+		 * is specified then it will used as a basis.
+		 * 
+		 * @param config The validation config.
+		 * @param baseValidator The validator used for extension.
+		 * @return A new validator.
+		 */
+		validator: function(config, baseValidator) {
+			if (!baseValidator) {
+				baseValidator = Element.Validator;
+			}
+			return $.extend({}, baseValidator, config);
 		},
 		
 		/**
-		 * Checks the current validation status.
-		 *
-		 * @return True if the element is invalid, false otherwise.
+		 * Validation status constant for VALID.
 		 */
-		isError: function() {
-			return this.validator.isError();
-		},	
+		VALID: "valid",
 		
 		/**
-		 * Checks the current validation status.
-		 *
-		 * @return True if the element is in warning status, false otherwise.
+		 * Validation status constant for ERROR.
+		 * @type String
 		 */
-		isWarning: function() {
-			return this.validator.isWarning();
-		},		
+		ERROR: "error",
 		
 		/**
-		 * Checks the current validation status.
-		 *
-		 * @return True if the element's validation has been cancelled, false otherwise.
+		 * Validation status constant for WARNING.
+		 * @type String
 		 */
-		isCancelled: function() {
-			return this.validator.isCancelled();
-		},		
+		WARNING: "warning",
 		
 		/**
-		 * Checks the current validation status.
-		 *
-		 * @return True if the element is currently being validated, false otherwise.
+		 * Validation status constant for CANCELLED.
+		 * @type String
 		 */
-		isValidating: function() {
-			return this.validator.isValidating();
-		}	
+		CANCELLED: "cancelled",
+		
+		/**
+		 * Validation status constant for VALIDATING.
+		 * @type String
+		 */
+		VALIDATING: "validating"
 	}
+	
 })();

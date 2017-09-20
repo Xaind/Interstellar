@@ -1,6 +1,6 @@
 /*
- * Interstellar Javascript Framework
- * https://github.com/xaind/interstellar
+ * Element Javascript Framework
+ * https://github.com/xaind/element
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
  
@@ -13,9 +13,9 @@
  * 
  * This object must be extended to include an 'element' property.
  * 
- * @module Interstellar.BaseValidator
+ * @module Element.Validator
  */
-Interstellar.BaseValidator = {
+Element.Validator = {
 	/**
 	 * Base validation function the contains 3 template methods. This is the function called
 	 * by external objects when validating an element.
@@ -28,7 +28,7 @@ Interstellar.BaseValidator = {
 		if (this.preValidationHandler) {
 			cancelValidation = this.preValidationHandler();
 			if (cancelValidation) { 
-				this.status = Interstellar.CANCELLED;
+				this.status = Element.CANCELLED;
 			}
 		}
 		
@@ -40,7 +40,7 @@ Interstellar.BaseValidator = {
 			this.validationRenderer.updateView();
 		}
 		
-		return Interstellar.VALID === this.status;
+		return Element.VALID === this.status;
 	},
 	
 	/**
@@ -59,7 +59,7 @@ Interstellar.BaseValidator = {
 	 * @return True if valid, false otherwise.
 	 */
 	isValid: function() {
-		return this.status === Interstellar.VALID;
+		return this.status === Element.VALID;
 	},
 	
 	/**
@@ -68,7 +68,7 @@ Interstellar.BaseValidator = {
 	 * @return True if invalid, false otherwise.
 	 */
 	isError: function() {
-		return this.status === Interstellar.ERROR;
+		return this.status === Element.ERROR;
 	},
 	
 	/**
@@ -77,7 +77,7 @@ Interstellar.BaseValidator = {
 	 * @return True if in warning status, false otherwise.
 	 */
 	isWarning: function() {
-		return this.status === Interstellar.WARNING;
+		return this.status === Element.WARNING;
 	},
 	
 	/**
@@ -86,7 +86,7 @@ Interstellar.BaseValidator = {
 	 * @return True if cancelled, false otherwise.
 	 */
 	isCancelled: function() {
-		return this.status === Interstellar.CANCELLED;
+		return this.status === Element.CANCELLED;
 	},
 	
 	/**
@@ -95,6 +95,6 @@ Interstellar.BaseValidator = {
 	 * @return True if currently validating, false otherwise.
 	 */
 	isValidating: function() {
-		return this.status === Interstellar.VALIDATING;
+		return this.status === Element.VALIDATING;
 	}
 };

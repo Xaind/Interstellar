@@ -1,7 +1,7 @@
 (function() {
 "use strict";
 
-$Page.username = Core.element({
+$Page.username = Element.create({
 	name: "username",
 	type: "string",
 	
@@ -13,7 +13,7 @@ $Page.username = Core.element({
 		events: "click",
 		callback: function() {
 			console.log("Listener: " + this.name + " clicked!");
-			console.log("Data: " + JSON.stringify(Interstellar.getModel()));
+			console.log("Data: " + JSON.stringify(Element.getModel()));
 		}
 	}, {
 		events: "enterkey",
@@ -22,10 +22,10 @@ $Page.username = Core.element({
 		}
 	}],
 	
-	validator: Interstellar.validator({
+	validator: Element.validator({
 			events: ["focusout","enterkey"],
 			errorMessage: "A username is required."
-		}, Interstellar.RequiredValidator),
+		}, Element.RequiredValidator),
 		
 	customFunction: function() {
 		alert("Custom function!");

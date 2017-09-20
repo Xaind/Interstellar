@@ -1,2 +1,2 @@
-# Interstellar
-Spanning the void between Javscript and Spring MVC
+# ElementJS
+A Javascript framework that provides structure for adding behaviour to HTML elements.

@@ -1,27 +1,26 @@
 /*
- * Interstellar Javascript Framework
- * https://github.com/xaind/interstellar
+ * Element Javascript Framework
+ * https://github.com/xaind/element
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
-
 /**
- * The Interstellar namespace. The main Interstellar object is attached to the Global namespace.
- * @namespace Interstellar
+ * The Element namespace. The main Element object is attached to the Global namespace.
+ * @namespace Element
  */
-var Interstellar = {};
+var Element = {};
 
 /**
  * The top-level object which manages the page model. HTML fields are typically
- * added via calls to Interstellar.element(). Helper functions are provided for
+ * added via calls to Element.create(). Helper functions are provided for
  * validation and for getting and setting the model via JSON.
  * 
- * @module Interstellar
+ * @module Element
  */
-Interstellar = (function() {
+Element = (function() {
 	"use strict";
 	
 	/**
-	 * The elements contained in this Interstellar page model.
+	 * The elements contained in this Element page model.
 	 * @type Array
 	 */
 	var elements = [],
@@ -37,13 +36,13 @@ Interstellar = (function() {
 	 * The id of the form which contains the model object.
 	 * @type String
 	 */
-	formId = "intersellar-form",
+	formId = "element-form",
 	
 	/**
 	 * The name of the model object as contained in the form hidden input element.
 	 * 	@type String
 	 */
-	modelName = "interstellar-model",
+	modelName = "element-model",
 	
 	/**
 	 * The default validation renderer.
@@ -79,7 +78,7 @@ Interstellar = (function() {
 	 * Syncs the element data with the data model.
 	 * @param element The element to update with model data.
 	 */
-	syncElement = function(element) {
+	sync = function(element) {
 		if (!element.name) {
 			return;
 		}
@@ -102,7 +101,7 @@ Interstellar = (function() {
 	
 	return {
 		/**
-		 * Initializes the Interstellar object.
+		 * Initializes the Element object.
 		 */
 		init: function(config) {
 			if (config.formId) {
@@ -125,7 +124,7 @@ Interstellar = (function() {
 		},
 		
 		/**
-		 * Validates all elements currently registered with Interstellar.
+		 * Validates all elements currently registered with Element.
 		 * @return True if all elements are valid, false otherwise.
 		 */
 		validate: function() {
@@ -154,8 +153,8 @@ Interstellar = (function() {
 		 * 
 		 * @param config The element configuration.
 		 */
-		element: function(config) {
-			var element = $.extend({}, Interstellar.Element, config);
+		create: function(config) {
+			var element = $.extend({}, Element.HtmlElement, config);
 			elements.push(element);
 			
 			if (element.listeners) {
@@ -182,14 +181,14 @@ Interstellar = (function() {
 					element.validationRenderer = $.extend({}, defaultValidationRenderer);
 				} else {
 					// If no renderer specified use the default for Bootstrap3
-					defaultValidationRenderer = Interstellar.Bootstrap3ValidationRenderer;
+					defaultValidationRenderer = Element.ValidationRenderer;
 					element.validationRenderer = $.extend({}, defaultValidationRenderer);
 				}
 				element.validator.validationRenderer = element.validationRenderer;
 				element.validationRenderer.validator = element.validator;
 			}
 			
-			syncElement(element);
+			sync(element);
 			
 			// Run any custom initialization code
 			if (element.init) {
@@ -209,7 +208,7 @@ Interstellar = (function() {
 		 */
 		validator: function(config, baseValidator) {
 			if (!baseValidator) {
-				baseValidator = Interstellar.BaseValidator;
+				baseValidator = Element.Validator;
 			}
 			return $.extend({}, baseValidator, config);
 		},
@@ -245,19 +244,15 @@ Interstellar = (function() {
 	}
 	
 })();
-/*
- * Interstellar Javascript Framework
- * https://github.com/xaind/interstellar
- * Copyright 2017, Xaind; Licensed Apache 2.0
- */
+
 /**
- * Page element definition. An element typically represents a HTML input element but can be used
+ * HTML element definition. An element typically represents a HTML input element but can be used
  * any HTML element such as a button, link or even a div. An element is created by passing in a
- * configuration object to Interstellar.element(). 
+ * configuration object to Element.create(). 
  * 
- * @module Interstellar.Element
+ * @module Element.HtmlElement
  */
-Interstellar.Element = (function() {
+Element.HtmlElement = (function() {
 	"use strict";
 	
 	/**
@@ -405,11 +400,6 @@ Interstellar.Element = (function() {
 		}	
 	}
 })();
-/*
- * Interstellar Javascript Framework
- * https://github.com/xaind/interstellar
- * Copyright 2017, Xaind; Licensed Apache 2.0
- */
  
 /**
  * The base validation object. Validators must implement the doValidation() method and
@@ -420,9 +410,9 @@ Interstellar.Element = (function() {
  * 
  * This object must be extended to include an 'element' property.
  * 
- * @module Interstellar.BaseValidator
+ * @module Element.Validator
  */
-Interstellar.BaseValidator = {
+Element.Validator = {
 	/**
 	 * Base validation function the contains 3 template methods. This is the function called
 	 * by external objects when validating an element.
@@ -435,7 +425,7 @@ Interstellar.BaseValidator = {
 		if (this.preValidationHandler) {
 			cancelValidation = this.preValidationHandler();
 			if (cancelValidation) { 
-				this.status = Interstellar.CANCELLED;
+				this.status = Element.CANCELLED;
 			}
 		}
 		
@@ -447,7 +437,7 @@ Interstellar.BaseValidator = {
 			this.validationRenderer.updateView();
 		}
 		
-		return Interstellar.VALID === this.status;
+		return Element.VALID === this.status;
 	},
 	
 	/**
@@ -466,7 +456,7 @@ Interstellar.BaseValidator = {
 	 * @return True if valid, false otherwise.
 	 */
 	isValid: function() {
-		return this.status === Interstellar.VALID;
+		return this.status === Element.VALID;
 	},
 	
 	/**
@@ -475,7 +465,7 @@ Interstellar.BaseValidator = {
 	 * @return True if invalid, false otherwise.
 	 */
 	isError: function() {
-		return this.status === Interstellar.ERROR;
+		return this.status === Element.ERROR;
 	},
 	
 	/**
@@ -484,7 +474,7 @@ Interstellar.BaseValidator = {
 	 * @return True if in warning status, false otherwise.
 	 */
 	isWarning: function() {
-		return this.status === Interstellar.WARNING;
+		return this.status === Element.WARNING;
 	},
 	
 	/**
@@ -493,7 +483,7 @@ Interstellar.BaseValidator = {
 	 * @return True if cancelled, false otherwise.
 	 */
 	isCancelled: function() {
-		return this.status === Interstellar.CANCELLED;
+		return this.status === Element.CANCELLED;
 	},
 	
 	/**
@@ -502,22 +492,16 @@ Interstellar.BaseValidator = {
 	 * @return True if currently validating, false otherwise.
 	 */
 	isValidating: function() {
-		return this.status === Interstellar.VALIDATING;
+		return this.status === Element.VALIDATING;
 	}
 };
-
-/*
- * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
- * Copyright 2017, Xaind; Licensed Apache 2.0
- */
 
 /**
  * A validator that checks if the input element has a value.
  * 
- * @module Interstellar.RequiredValidator
+ * @module Element.RequiredValidator
  */
-Interstellar.RequiredValidator = Interstellar.validator({
+Element.RequiredValidator = Element.validator({
 	/**
 	 * The events for binding this validator.
 	 */
@@ -534,24 +518,19 @@ Interstellar.RequiredValidator = Interstellar.validator({
 	 */
 	doValidation: function() {
 		if (!this.element.value()) {
-			this.result(Interstellar.ERROR, this.errorMessage);
+			this.result(Element.ERROR, this.errorMessage);
 		} else {
-			this.result(Interstellar.VALID);
+			this.result(Element.VALID);
 		}
 	}
 });
-/*
- * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
- * Copyright 2017, Xaind; Licensed Apache 2.0
- */
 
 /**
  * A validation renderer that works with Bootstrap 3 input styles.
  * 
- * @module Interstellar.Bootstrap3ValidationRenderer
+ * @module Element.ValidationRenderer
  */
-Interstellar.Bootstrap3ValidationRenderer = {
+Element.ValidationRenderer = {
 	/**
 	 * A back reference to this renderer's validator.
 	 */

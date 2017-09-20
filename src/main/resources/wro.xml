@@ -1,9 +1,9 @@
 <groups xmlns="http://www.isdc.ro/wro">
-	<group name="interstellar.min">
-		<js>file:src/main/resources/static/js/Interstellar.js</js>
+	<group name="element.min">
 		<js>file:src/main/resources/static/js/Element.js</js>
-		<js>file:src/main/resources/static/js/validation/BaseValidator.js</js>
-		<js>file:src/main/resources/static/js/validation/RequiredValidator.js</js>
-		<js>file:src/main/resources/static/js/validation/renderers/Bootstrap3ValidationRenderer.js</js>
+		<js>file:src/main/resources/static/js/HtmlElement.js</js>
+		<js>file:src/main/resources/static/js/Validator.js</js>
+		<js>file:src/main/resources/static/js/RequiredValidator.js</js>
+		<js>file:src/main/resources/static/js/ValidationRenderer.js</js>
 	</group>
 </groups>

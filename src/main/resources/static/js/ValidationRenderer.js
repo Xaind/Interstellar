@@ -1,15 +1,14 @@
 /*
- * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
+ * Element Javascript Framework
+ * https://github.com/xaind/element
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
-
 /**
  * A validation renderer that works with Bootstrap 3 input styles.
  * 
- * @module Interstellar.Bootstrap3ValidationRenderer
+ * @module Element.ValidationRenderer
  */
-Interstellar.Bootstrap3ValidationRenderer = {
+Element.ValidationRenderer = {
 	/**
 	 * A back reference to this renderer's validator.
 	 */

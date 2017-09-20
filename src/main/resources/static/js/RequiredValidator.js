@@ -1,15 +1,14 @@
 /*
- * Interstellar Javascript Framework
- * https://github.com/Xaind/interstellar
+ * Element Javascript Framework
+ * https://github.com/xaind/element
  * Copyright 2017, Xaind; Licensed Apache 2.0
  */
-
 /**
  * A validator that checks if the input element has a value.
  * 
- * @module Interstellar.RequiredValidator
+ * @module Element.RequiredValidator
  */
-Interstellar.RequiredValidator = Interstellar.validator({
+Element.RequiredValidator = Element.validator({
 	/**
 	 * The events for binding this validator.
 	 */
@@ -26,9 +25,9 @@ Interstellar.RequiredValidator = Interstellar.validator({
 	 */
 	doValidation: function() {
 		if (!this.element.value()) {
-			this.result(Interstellar.ERROR, this.errorMessage);
+			this.result(Element.ERROR, this.errorMessage);
 		} else {
-			this.result(Interstellar.VALID);
+			this.result(Element.VALID);
 		}
 	}
 });

@@ -1,7 +1,7 @@
 (function() {
 "use strict";
 
-$Page.password = Interstellar.element({
+$Page.password = Element.create({
 	name: "password",
 	type: "string",
 	
@@ -14,9 +14,9 @@ $Page.password = Interstellar.element({
 		}
 	}],
 	
-	validator: Interstellar.validator({
+	validator: Element.validator({
 		errorMessage: "A password is required."
-	}, Interstellar.RequiredValidator),
+	}, Element.RequiredValidator),
 });
 
 })(); 
